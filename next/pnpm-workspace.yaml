@@ -1,0 +1,5 @@
+allowBuilds:
+  '@mui/x-telemetry': false
+  '@parcel/watcher': false
+  sharp: false
+  unrs-resolver: false
