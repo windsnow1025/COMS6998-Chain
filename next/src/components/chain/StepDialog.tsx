@@ -18,7 +18,6 @@ import {
   StepResDto,
 } from '@/client/nest';
 
-const MaxTemperature = 2;
 const MaxStepNameLength = 16;
 const MaxPromptLength = 20000;
 // The API's refusal of a model that cannot be called
@@ -49,7 +48,6 @@ function StepForm({step, models, placeholders, textOutputHold, saving, onClose, 
       systemPrompt: step.systemPrompt,
       userPrompt: step.userPrompt,
       modelId: step.modelId,
-      temperature: step.temperature,
     }
     : {
       name: '',
@@ -58,25 +56,19 @@ function StepForm({step, models, placeholders, textOutputHold, saving, onClose, 
       systemPrompt: '',
       userPrompt: '',
       modelId: models.find(choosable)?.id ?? '',
-      temperature: 1,
     }));
-  // The temperature as typed, so that a partial number stays in the field
-  const [temperatureText, setTemperatureText] = React.useState(() => String(values.temperature));
   // The prompt a placeholder is inserted into: the one focused last, the user prompt before any
   const [target, setTarget] = React.useState<PromptField>('userPrompt');
   const systemPromptRef = React.useRef<HTMLTextAreaElement>(null);
   const userPromptRef = React.useRef<HTMLTextAreaElement>(null);
 
-  const temperature = Number(temperatureText);
-  const temperatureValid = temperatureText.trim() !== '' && Number.isFinite(temperature) && temperature >= 0 && temperature <= MaxTemperature;
   const chosenModel = models.find((model) => model.id === values.modelId);
   const modelHold = chosenModel && !choosable(chosenModel) ? ModelHold : '';
   const complete = values.name.trim() !== ''
     && values.systemPrompt.trim() !== ''
     && values.userPrompt.trim() !== ''
     && values.modelId !== ''
-    && modelHold === ''
-    && temperatureValid;
+    && modelHold === '';
 
   const set = (change: Partial<StepReqDto>) => setValues((current) => ({...current, ...change}));
 
@@ -130,32 +122,20 @@ function StepForm({step, models, placeholders, textOutputHold, saving, onClose, 
               <MenuItem value={StepReqDtoOutputEnum.Captions}>Captions</MenuItem>
             </TextField>
           </Box>
-          <Box className="flex-normal" sx={{gap: 2, alignItems: 'flex-start'}}>
-            <TextField
-              select
-              label="Model"
-              value={values.modelId}
-              onChange={(event) => set({modelId: event.target.value})}
-              required
-              error={modelHold !== ''}
-              helperText={modelHold}
-              sx={{flex: '1 1 260px'}}
-            >
-              {models.map((model) => (
-                <MenuItem key={model.id} value={model.id} disabled={!choosable(model)}>{model.apiType} · {model.name}</MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              label="Temperature"
-              type="number"
-              value={temperatureText}
-              onChange={(event) => setTemperatureText(event.target.value)}
-              error={!temperatureValid}
-              sx={{flex: '0 1 160px'}}
-              slotProps={{htmlInput: {min: 0, max: MaxTemperature, step: 0.1}}}
-              helperText={`0 to ${MaxTemperature}`}
-            />
-          </Box>
+          <TextField
+            select
+            label="Model"
+            value={values.modelId}
+            onChange={(event) => set({modelId: event.target.value})}
+            required
+            error={modelHold !== ''}
+            helperText={modelHold}
+            fullWidth
+          >
+            {models.map((model) => (
+              <MenuItem key={model.id} value={model.id} disabled={!choosable(model)}>{model.apiType} · {model.name}</MenuItem>
+            ))}
+          </TextField>
           <TextField
             label="System prompt"
             value={values.systemPrompt}
@@ -208,7 +188,7 @@ function StepForm({step, models, placeholders, textOutputHold, saving, onClose, 
         <Button onClick={onClose} disabled={saving}>Cancel</Button>
         <Button
           variant="contained"
-          onClick={() => onSave({...values, name: values.name.trim(), temperature})}
+          onClick={() => onSave({...values, name: values.name.trim()})}
           disabled={saving || !complete}
         >
           {saving ? 'Saving…' : 'Save'}

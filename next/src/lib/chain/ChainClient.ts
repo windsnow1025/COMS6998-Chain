@@ -5,7 +5,8 @@ import {
   AdminConfigApi,
   AdminModelResDto,
   AdminPhotoPageResDto,
-  AdminScreeningResDto,
+  AdminPipelineStepResDto,
+  AdminPipelineStepResDtoStepEnum,
   ChainCaptionPageResDto,
   ChainReqDto,
   ChainResDto,
@@ -102,9 +103,14 @@ export default class ChainClient {
     return unwrap(this.chains.chainsControllerFindPlaceholders());
   }
 
-  // The product's step before any chain, as the admin set it
-  fetchScreening(): Promise<AdminScreeningResDto> {
-    return unwrap(this.adminConfig.adminConfigControllerFindScreening());
+  // The step every chain shares, the photo's description, as the admin set it
+  async fetchSharedStep(): Promise<AdminPipelineStepResDto> {
+    const steps = await unwrap(this.adminConfig.adminConfigControllerFindPipelineSteps());
+    const shared = steps.find((step) => step.step === AdminPipelineStepResDtoStepEnum.Describe);
+    if (!shared) {
+      throw new Error('The API answered no describe step');
+    }
+    return shared;
   }
 
   // Every model, as the admin lists them; a step runs on an enabled one

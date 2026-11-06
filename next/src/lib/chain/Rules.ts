@@ -6,6 +6,14 @@ export const MinVoicesInMix = 3;
 export const MixNeedsCaptions = 'A chain in the mix ends with a step that writes captions';
 export const MixKeepsMinimum = `The mix keeps at least ${MinVoicesInMix} voices`;
 
+// The steps every chain shares before its own: the photo's description, which the product writes once for a photo
+export const SharedSteps = 1;
+
+// The number of a chain's own step at a position, counted from the shared steps
+export function stepNumber(position: number): number {
+  return SharedSteps + position + 1;
+}
+
 // Whether steps in this order end with a step that writes captions
 export function writesCaptions(steps: Pick<StepResDto, 'output'>[]): boolean {
   return steps.length > 0 && steps[steps.length - 1].output === StepResDtoOutputEnum.Captions;

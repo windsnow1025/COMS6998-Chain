@@ -1,4 +1,4 @@
-# AdminScreeningResDto
+# AdminPipelineStepResDto
 
 
 ## Properties
@@ -9,21 +9,19 @@ Name | Type | Description | Notes
 **modelId** | **string** |  | [default to undefined]
 **model** | **string** |  | [default to undefined]
 **apiType** | **string** |  | [default to undefined]
-**temperature** | **number** |  | [default to undefined]
 **systemPrompt** | **string** |  | [default to undefined]
 **userPrompt** | **string** |  | [default to undefined]
 
 ## Example
 
 ```typescript
-import { AdminScreeningResDto } from './api';
+import { AdminPipelineStepResDto } from './api';
 
-const instance: AdminScreeningResDto = {
+const instance: AdminPipelineStepResDto = {
     step,
     modelId,
     model,
     apiType,
-    temperature,
     systemPrompt,
     userPrompt,
 };

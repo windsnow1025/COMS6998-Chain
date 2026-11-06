@@ -35,14 +35,15 @@ docs/AdminPhotoReqDto.md
 docs/AdminPhotoResDto.md
 docs/AdminPhotoUploaderResDto.md
 docs/AdminPhotoVoteResDto.md
+docs/AdminPipelineStepReqDto.md
+docs/AdminPipelineStepResDto.md
 docs/AdminProviderReqDto.md
 docs/AdminProviderResDto.md
 docs/AdminProviderUpdateReqDto.md
-docs/AdminScreeningReqDto.md
-docs/AdminScreeningResDto.md
 docs/AdminTermReqDto.md
 docs/AdminTermResDto.md
 docs/AdminTotalsResDto.md
+docs/AdminUserReqDto.md
 docs/AdminUserResDto.md
 docs/AdminVoiceResDto.md
 docs/AdminVotePageResDto.md

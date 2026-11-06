@@ -1,21 +1,19 @@
-# AdminScreeningReqDto
+# AdminPipelineStepReqDto
 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**modelId** | **string** |  | [optional] [default to undefined]
-**temperature** | **number** |  | [optional] [default to undefined]
+**modelId** | **string** |  | [default to undefined]
 
 ## Example
 
 ```typescript
-import { AdminScreeningReqDto } from './api';
+import { AdminPipelineStepReqDto } from './api';
 
-const instance: AdminScreeningReqDto = {
+const instance: AdminPipelineStepReqDto = {
     modelId,
-    temperature,
 };
 ```
 

@@ -4,8 +4,9 @@ import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
-import {RunResDto, RunResDtoStatusEnum} from '@/client/nest';
+import {AdminPipelineStepResDtoStepEnum, RunResDto, RunResDtoStatusEnum} from '@/client/nest';
 import {formatInstant} from '@/lib/chain/Format';
+import {SharedSteps} from '@/lib/chain/Rules';
 
 // How a run's status reads in a chip
 export function statusChip(status: RunResDtoStatusEnum): React.ReactElement {
@@ -38,15 +39,17 @@ export function RunAnswer({run}: { run: RunResDto }) {
   return null;
 }
 
-// Where a run stands against the steps it makes
+// Where a run stands against the chain's steps, of which the shared ones are done before it starts
 export function progressOf(run: RunResDto): string {
+  const count = SharedSteps + run.stepCount;
   if (run.status === RunResDtoStatusEnum.Running) {
-    return `Step ${Math.min(run.calls.length + 1, run.stepCount)} of ${run.stepCount}`;
+    return `Step ${Math.min(SharedSteps + run.calls.length + 1, count)} of ${count}`;
   }
-  return `${run.calls.length} of ${run.stepCount} steps`;
+  return `${SharedSteps + run.calls.length} of ${count} steps`;
 }
 
-// A run in progress or just finished: the photo, the steps done so far, and the answer, with the way to its page
+// A run in progress or just finished: the photo, the shared step and the steps done so far, and the answer, with the
+// way to its page
 export default function RunPanel({run, href}: { run: RunResDto; href: string }) {
   const running = run.status === RunResDtoStatusEnum.Running;
   return (
@@ -66,6 +69,7 @@ export default function RunPanel({run, href}: { run: RunResDto; href: string }) 
             {running && <CircularProgress size={16}/>}
           </Box>
           <Box className="flex-normal" sx={{gap: 1, mt: 1}}>
+            <Chip size="small" variant="outlined" label={`${AdminPipelineStepResDtoStepEnum.Describe} · shared`}/>
             {run.calls.map((call) => (
               <Chip key={call.id} size="small" variant="outlined" label={`${call.step} · ${(call.durationMs / 1000).toFixed(1)}s`}/>
             ))}

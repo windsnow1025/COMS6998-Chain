@@ -15,7 +15,6 @@ Name | Type | Description | Notes
 **modelId** | **string** |  | [default to undefined]
 **model** | **string** |  | [default to undefined]
 **apiType** | **string** |  | [default to undefined]
-**temperature** | **number** |  | [default to undefined]
 
 ## Example
 
@@ -33,7 +32,6 @@ const instance: StepResDto = {
     modelId,
     model,
     apiType,
-    temperature,
 };
 ```
 

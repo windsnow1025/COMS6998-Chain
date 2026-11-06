@@ -7,7 +7,6 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **userId** | **number** |  | [default to undefined]
 **flavor** | [**FlavorResDto**](FlavorResDto.md) |  | [default to undefined]
-**temperature** | **number** |  | [default to undefined]
 **id** | **string** |  | [default to undefined]
 **imageId** | **string** |  | [default to undefined]
 **step** | **string** |  | [default to undefined]
@@ -28,7 +27,6 @@ import { AdminLlmCallResDto } from './api';
 const instance: AdminLlmCallResDto = {
     userId,
     flavor,
-    temperature,
     id,
     imageId,
     step,

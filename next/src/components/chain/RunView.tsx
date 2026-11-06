@@ -10,9 +10,10 @@ import Chip from '@mui/material/Chip';
 import CircularProgress from '@mui/material/CircularProgress';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
-import {ChainResDto, RunResDto, RunResDtoStatusEnum} from '@/client/nest';
+import {AdminPipelineStepResDtoStepEnum, ChainResDto, RunResDto, RunResDtoStatusEnum} from '@/client/nest';
 import ChainClient from '@/lib/chain/ChainClient';
 import {formatInstant} from '@/lib/chain/Format';
+import {SharedSteps, stepNumber} from '@/lib/chain/Rules';
 import {HoverSx} from './HoverSx';
 import LoadFailure from './LoadFailure';
 import PromptBlock from './PromptBlock';
@@ -33,7 +34,8 @@ function durationOf(run: RunResDto): string | null {
   return `${seconds.toFixed(1)}s in all`;
 }
 
-// A run of a chain on a photo: the photo, the answer, and every step's request with its prompts and its response
+// A run of a chain on a photo: the photo, the answer, the description the shared step wrote for the photo, and the
+// request of each of the chain's own steps with its prompts and its response
 export default function RunView({chainId, runId}: { chainId: string; runId: string }) {
   const toast = useToast();
   const router = useRouter();
@@ -154,9 +156,8 @@ export default function RunView({chainId, runId}: { chainId: string; runId: stri
             alt=""
             sx={{width: '100%', maxWidth: 480, borderRadius: 1, display: 'block', bgcolor: 'action.hover'}}
           />
-          <Typography variant="body2" sx={{mt: 1.5}}>{run.photo.description}</Typography>
           {run.photo.place && (
-            <Typography variant="body2" color="text.secondary" sx={{mt: 0.5}}>{run.photo.place}</Typography>
+            <Typography variant="body2" color="text.secondary" sx={{mt: 1.5}}>{run.photo.place}</Typography>
           )}
         </Card>
         <Card variant="outlined" sx={{...HoverSx, p: 2, flex: '1 1 320px'}}>
@@ -173,12 +174,22 @@ export default function RunView({chainId, runId}: { chainId: string; runId: stri
       </Box>
 
       <Box className="flex-column" sx={{gap: 2}}>
+        <Card variant="outlined" sx={{...HoverSx, p: 2}}>
+          <Box className="flex-normal" sx={{gap: 1, mb: 1.5}}>
+            <Chip size="small" color="primary" variant="outlined" label={`Step ${SharedSteps}: ${AdminPipelineStepResDtoStepEnum.Describe}`}/>
+            <Chip size="small" variant="outlined" label="shared by every chain"/>
+          </Box>
+          <Typography variant="body2" color="text.secondary" sx={{mb: 1.5}}>
+            The photo&apos;s description, written once when the photo was uploaded: the run read it and made no request
+            for it.
+          </Typography>
+          <PromptBlock label="Description" text={run.photo.description}/>
+        </Card>
         {run.calls.map((call, index) => (
           <Card key={call.id} variant="outlined" sx={{...HoverSx, p: 2}}>
             <Box className="flex-normal" sx={{gap: 1, mb: 1.5}}>
-              <Chip size="small" color="primary" variant="outlined" label={`Step ${index + 1}: ${call.step}`}/>
+              <Chip size="small" color="primary" variant="outlined" label={`Step ${stepNumber(index)}: ${call.step}`}/>
               <Chip size="small" label={call.model}/>
-              {call.temperature !== null && <Chip size="small" label={`temperature ${call.temperature}`}/>}
               <Chip size="small" label={`${call.inputTokens} in / ${call.outputTokens} out`}/>
               <Chip size="small" label={`${(call.durationMs / 1000).toFixed(1)}s`}/>
               <Chip size="small" label={formatInstant(call.createdAt)}/>

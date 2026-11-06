@@ -26,7 +26,7 @@ import Typography from '@mui/material/Typography';
 import {
   AdminModelResDto,
   AdminPhotoResDto,
-  AdminScreeningResDto,
+  AdminPipelineStepResDto,
   ChainCaptionPageResDto,
   ChainResDto,
   PlaceholderResDto,
@@ -40,7 +40,7 @@ import {
 } from '@/client/nest';
 import ChainClient from '@/lib/chain/ChainClient';
 import {formatInstant, truncate} from '@/lib/chain/Format';
-import {captionsHold, MinVoicesInMix, MixKeepsMinimum, MixNeedsCaptions, writesCaptions} from '@/lib/chain/Rules';
+import {captionsHold, MinVoicesInMix, MixKeepsMinimum, MixNeedsCaptions, stepNumber, writesCaptions} from '@/lib/chain/Rules';
 import ChainDialog, {ChainValues} from './ChainDialog';
 import ConfirmDialog from './ConfirmDialog';
 import ExpandButton from './ExpandButton';
@@ -49,7 +49,7 @@ import LoadFailure from './LoadFailure';
 import PhotoPickerDialog from './PhotoPickerDialog';
 import PromptsCollapse from './PromptsCollapse';
 import RunPanel, {statusChip} from './RunPanel';
-import ScreeningCard from './ScreeningCard';
+import SharedStepCard from './SharedStepCard';
 import StepDialog from './StepDialog';
 import {useToast} from './Toast';
 import VoiceDot from './VoiceDot';
@@ -60,7 +60,7 @@ const PollIntervalMs = 2000;
 const MixSwitchId = 'chain-in-the-mix';
 // The API's refusals: to delete a chain in the mix, and to run a chain without a step
 const InMixHold = 'Take the chain out of the mix first';
-const NoStepHold = 'The chain has no step to run';
+const NoStepHold = 'The chain has no step of its own to run';
 
 // Why a step's moves and its delete are refused; empty where they are not
 interface StepHolds {
@@ -80,7 +80,7 @@ function PhotoThumb({url}: { url: string }) {
   );
 }
 
-// One step of the chain: what it looks at, what it answers, its model, and its prompts behind a chevron, with the
+// One of the chain's own steps: what it looks at, what it answers, its model, and its prompts behind a chevron, with the
 // ways to move, edit, and delete it; a held way shows its hold in place of its name
 function StepCard({step, count, busy, holds, onMove, onEdit, onDelete}: {
   step: StepResDto;
@@ -96,11 +96,10 @@ function StepCard({step, count, busy, holds, onMove, onEdit, onDelete}: {
     <Card variant="outlined" sx={{...HoverSx, p: 2}}>
       <Box className="flex-between" sx={{gap: 1}}>
         <Box className="flex-normal" sx={{gap: 1, flex: 1, minWidth: 0}}>
-          <Chip size="small" color="primary" variant="outlined" label={`Step ${step.position + 1}: ${step.name}`}/>
+          <Chip size="small" color="primary" variant="outlined" label={`Step ${stepNumber(step.position)}: ${step.name}`}/>
           <Chip size="small" label={step.input === StepResDtoInputEnum.Image ? 'photo in' : 'text in'}/>
           <Chip size="small" label={`${step.output} out`}/>
           <Chip size="small" label={`${step.apiType} · ${step.model}`}/>
-          <Chip size="small" label={`temperature ${step.temperature}`}/>
         </Box>
         <Box className="flex-normal" sx={{gap: 0.5, flexShrink: 0}}>
           <Tooltip title={holds.up || 'Move up'}>
@@ -141,7 +140,7 @@ function StepCard({step, count, busy, holds, onMove, onEdit, onDelete}: {
               </IconButton>
             </span>
           </Tooltip>
-          <ExpandButton open={open} label={`Prompts of step ${step.position + 1}`} onClick={() => setOpen(!open)}/>
+          <ExpandButton open={open} label={`Prompts of step ${stepNumber(step.position)}`} onClick={() => setOpen(!open)}/>
         </Box>
       </Box>
       <PromptsCollapse open={open} systemPrompt={step.systemPrompt} userPrompt={step.userPrompt}/>
@@ -149,8 +148,8 @@ function StepCard({step, count, busy, holds, onMove, onEdit, onDelete}: {
   );
 }
 
-// A voice's chain: its own fields and its place in the mix, the screening it starts from, its steps in order, a run
-// of it on a photo, and what it wrote, in runs and for the product
+// A voice's chain: its own fields and its place in the mix, its steps in order, of which every chain shares the first,
+// a run of it on a photo, and what it wrote, in runs and for the product
 export default function ChainView({id}: { id: string }) {
   const toast = useToast();
   const router = useRouter();
@@ -158,7 +157,7 @@ export default function ChainView({id}: { id: string }) {
   const [chain, setChain] = React.useState<ChainResDto | null>(null);
   // Every chain, for the count in the mix
   const [chains, setChains] = React.useState<ChainResDto[]>([]);
-  const [screening, setScreening] = React.useState<AdminScreeningResDto | null>(null);
+  const [sharedStep, setSharedStep] = React.useState<AdminPipelineStepResDto | null>(null);
   const [models, setModels] = React.useState<AdminModelResDto[]>([]);
   const [placeholders, setPlaceholders] = React.useState<PlaceholderResDto[]>([]);
   const [failure, setFailure] = React.useState<string | null>(null);
@@ -191,17 +190,17 @@ export default function ChainView({id}: { id: string }) {
     const load = async () => {
       const client = new ChainClient();
       try {
-        const [fetchedChain, fetchedChains, fetchedScreening, fetchedModels, fetchedPlaceholders] = await Promise.all([
+        const [fetchedChain, fetchedChains, fetchedSharedStep, fetchedModels, fetchedPlaceholders] = await Promise.all([
           client.fetchChain(id),
           client.fetchChains(),
-          client.fetchScreening(),
+          client.fetchSharedStep(),
           client.fetchModels(),
           client.fetchPlaceholders(),
         ]);
         if (active) {
           setChain(fetchedChain);
           setChains(fetchedChains);
-          setScreening(fetchedScreening);
+          setSharedStep(fetchedSharedStep);
           setModels(fetchedModels);
           setPlaceholders(fetchedPlaceholders);
         }
@@ -283,7 +282,7 @@ export default function ChainView({id}: { id: string }) {
     return <LoadFailure message={failure} onRetry={retry}/>;
   }
 
-  if (!chain || !screening) {
+  if (!chain || !sharedStep) {
     return (
       <Box className="flex-center" sx={{minHeight: '50vh'}}>
         <CircularProgress/>
@@ -336,7 +335,7 @@ export default function ChainView({id}: { id: string }) {
   const saveChain = async (values: ChainValues) => {
     setSaving(true);
     try {
-      setChain(await new ChainClient().updateChain(id, {name: values.name, tagline: values.tagline, color: values.color}));
+      setChain(await new ChainClient().updateChain(id, {name: values.name, tagline: values.tagline, color: values.color, weight: values.weight}));
       toast.show('Chain updated.', 'success');
       setEditing(false);
     } catch (error) {
@@ -433,6 +432,9 @@ export default function ChainView({id}: { id: string }) {
               </Tooltip>
               <Typography variant="body2" component="label" htmlFor={MixSwitchId}>In the mix</Typography>
             </Box>
+            <Tooltip title="The voice's share of new photos against the other voices in the mix">
+              <Chip size="small" variant="outlined" label={`weight ${chain.weight}`}/>
+            </Tooltip>
             <Button variant="outlined" startIcon={<EditRoundedIcon/>} onClick={() => setEditing(true)}>Edit</Button>
             <Tooltip title={deleteHold}>
               <span>
@@ -445,15 +447,13 @@ export default function ChainView({id}: { id: string }) {
         </Box>
       </Card>
 
-      <ScreeningCard screening={screening}/>
-
       <Card variant="outlined" sx={HoverSx}>
         <Box className="flex-between" sx={{p: 2, pb: 1, gap: 2}}>
           <Box sx={{flex: 1, minWidth: 0}}>
             <Typography variant="subtitle1">Steps</Typography>
             <Typography variant="body2" color="text.secondary">
-              Run in order on a photo after its screening; the last step&apos;s captions are the voice&apos;s.
-              {' '}{MixNeedsCaptions}.
+              Run in order on a photo: step 1 is the same for every chain, and the last step&apos;s captions are the
+              voice&apos;s. {MixNeedsCaptions}.
             </Typography>
           </Box>
           <Button variant="contained" startIcon={<AddRoundedIcon/>} onClick={() => setStepDialog({open: true, step: null})} sx={{flexShrink: 0}}>
@@ -461,6 +461,7 @@ export default function ChainView({id}: { id: string }) {
           </Button>
         </Box>
         <Box className="flex-column" sx={{gap: 2, p: 2, pt: 1}}>
+          <SharedStepCard step={sharedStep}/>
           {chain.steps.map((step, index) => (
             <StepCard
               key={step.id}
@@ -474,7 +475,7 @@ export default function ChainView({id}: { id: string }) {
             />
           ))}
           {chain.steps.length === 0 && (
-            <Typography variant="body2" color="text.secondary">No step yet. The chain writes nothing until it has one.</Typography>
+            <Typography variant="body2" color="text.secondary">No step of its own yet. The chain writes nothing until it has one.</Typography>
           )}
         </Box>
       </Card>
@@ -484,7 +485,8 @@ export default function ChainView({id}: { id: string }) {
           <Box sx={{flex: 1, minWidth: 0}}>
             <Typography variant="subtitle1">Run the chain</Typography>
             <Typography variant="body2" color="text.secondary">
-              Runs the steps on a photo of the library. The answer stays here, not among the photo&apos;s captions.
+              Runs the chain&apos;s own steps on a photo of the library, from the description the photo keeps. The answer
+              stays here, not among the photo&apos;s captions.
             </Typography>
           </Box>
           <Tooltip title={pickHold}>

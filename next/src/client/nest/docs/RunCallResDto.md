@@ -5,7 +5,6 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**temperature** | **number** |  | [default to undefined]
 **id** | **string** |  | [default to undefined]
 **step** | **string** |  | [default to undefined]
 **model** | **string** |  | [default to undefined]
@@ -23,7 +22,6 @@ Name | Type | Description | Notes
 import { RunCallResDto } from './api';
 
 const instance: RunCallResDto = {
-    temperature,
     id,
     step,
     model,

@@ -9,6 +9,7 @@ Name | Type | Description | Notes
 **name** | **string** |  | [default to undefined]
 **tagline** | **string** |  | [default to undefined]
 **color** | **string** |  | [default to undefined]
+**weight** | **number** |  | [default to undefined]
 
 ## Example
 
@@ -20,6 +21,7 @@ const instance: ChainReqDto = {
     name,
     tagline,
     color,
+    weight,
 };
 ```
 

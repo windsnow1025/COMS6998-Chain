@@ -9,6 +9,7 @@ Name | Type | Description | Notes
 **tagline** | **string** |  | [optional] [default to undefined]
 **color** | **string** |  | [optional] [default to undefined]
 **inMix** | **boolean** |  | [optional] [default to undefined]
+**weight** | **number** |  | [optional] [default to undefined]
 
 ## Example
 
@@ -20,6 +21,7 @@ const instance: ChainUpdateReqDto = {
     tagline,
     color,
     inMix,
+    weight,
 };
 ```
 

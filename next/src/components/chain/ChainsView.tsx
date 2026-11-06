@@ -15,7 +15,7 @@ import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import {ChainResDto} from '@/client/nest';
 import ChainClient from '@/lib/chain/ChainClient';
-import {MinVoicesInMix} from '@/lib/chain/Rules';
+import {MinVoicesInMix, SharedSteps} from '@/lib/chain/Rules';
 import ChainDialog, {ChainValues} from './ChainDialog';
 import {HoverSx} from './HoverSx';
 import LoadFailure from './LoadFailure';
@@ -109,6 +109,7 @@ export default function ChainsView() {
             <TableCell>Tagline</TableCell>
             <TableCell align="right">Steps</TableCell>
             <TableCell>In the mix</TableCell>
+            <TableCell align="right">Weight</TableCell>
             <TableCell align="right">Captions</TableCell>
             <TableCell align="right">Runs</TableCell>
           </TableRow>
@@ -130,8 +131,9 @@ export default function ChainsView() {
                 <TableCell>
                   <Typography variant="body2" color="text.secondary">{chain.tagline}</Typography>
                 </TableCell>
-                <TableCell align="right">{chain.steps.length}</TableCell>
+                <TableCell align="right">{SharedSteps + chain.steps.length}</TableCell>
                 <TableCell>{chain.inMix ? 'Yes' : 'No'}</TableCell>
+                <TableCell align="right">{chain.weight}</TableCell>
                 <TableCell align="right">{chain.captions}</TableCell>
                 <TableCell align="right">{chain.runs}</TableCell>
               </TableRow>

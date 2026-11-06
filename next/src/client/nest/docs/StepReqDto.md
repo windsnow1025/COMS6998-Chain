@@ -11,7 +11,6 @@ Name | Type | Description | Notes
 **systemPrompt** | **string** |  | [default to undefined]
 **userPrompt** | **string** |  | [default to undefined]
 **modelId** | **string** |  | [default to undefined]
-**temperature** | **number** |  | [default to undefined]
 
 ## Example
 
@@ -25,7 +24,6 @@ const instance: StepReqDto = {
     systemPrompt,
     userPrompt,
     modelId,
-    temperature,
 };
 ```
 

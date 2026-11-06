@@ -5,7 +5,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**inMix** | **boolean** |  | [default to undefined]
+**inMix** | **boolean** |  | [optional] [default to undefined]
+**weight** | **number** |  | [optional] [default to undefined]
 
 ## Example
 
@@ -14,6 +15,7 @@ import { AdminChainReqDto } from './api';
 
 const instance: AdminChainReqDto = {
     inMix,
+    weight,
 };
 ```
 

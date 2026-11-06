@@ -13,6 +13,7 @@ All URIs are relative to *http://localhost*
 |[**adminControllerRemoveCaption**](#admincontrollerremovecaption) | **DELETE** /admin/captions/{id} | |
 |[**adminControllerUpdateCaption**](#admincontrollerupdatecaption) | **PATCH** /admin/captions/{id} | |
 |[**adminControllerUpdatePhoto**](#admincontrollerupdatephoto) | **PATCH** /admin/photos/{id} | |
+|[**adminControllerUpdateUser**](#admincontrollerupdateuser) | **PATCH** /admin/users/{id} | |
 
 # **adminControllerFindLlmCall**
 > AdminLlmCallResDto adminControllerFindLlmCall()
@@ -449,6 +450,60 @@ const { status, data } = await apiInstance.adminControllerUpdatePhoto(
 ### Return type
 
 **AdminPhotoDetailResDto**
+
+### Authorization
+
+[bearer](../README.md#bearer)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** |  |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **adminControllerUpdateUser**
+> AdminUserResDto adminControllerUpdateUser(adminUserReqDto)
+
+
+### Example
+
+```typescript
+import {
+    AdminApi,
+    Configuration,
+    AdminUserReqDto
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new AdminApi(configuration);
+
+let id: number; // (default to undefined)
+let adminUserReqDto: AdminUserReqDto; //
+
+const { status, data } = await apiInstance.adminControllerUpdateUser(
+    id,
+    adminUserReqDto
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **adminUserReqDto** | **AdminUserReqDto**|  | |
+| **id** | [**number**] |  | defaults to undefined|
+
+
+### Return type
+
+**AdminUserResDto**
 
 ### Authorization
 

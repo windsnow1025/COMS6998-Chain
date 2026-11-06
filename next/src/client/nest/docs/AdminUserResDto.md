@@ -5,6 +5,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**firstName** | **string** |  | [default to undefined]
+**lastName** | **string** |  | [default to undefined]
 **roles** | **Array&lt;string&gt;** |  | [default to undefined]
 **lastActiveAt** | **string** |  | [default to undefined]
 **id** | **number** |  | [default to undefined]
@@ -20,6 +22,8 @@ Name | Type | Description | Notes
 import { AdminUserResDto } from './api';
 
 const instance: AdminUserResDto = {
+    firstName,
+    lastName,
     roles,
     lastActiveAt,
     id,

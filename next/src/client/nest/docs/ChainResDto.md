@@ -12,6 +12,7 @@ Name | Type | Description | Notes
 **color** | **string** |  | [default to undefined]
 **position** | **number** |  | [default to undefined]
 **inMix** | **boolean** |  | [default to undefined]
+**weight** | **number** |  | [default to undefined]
 **writesCaptions** | **boolean** |  | [default to undefined]
 **captions** | **number** |  | [default to undefined]
 **runs** | **number** |  | [default to undefined]
@@ -31,6 +32,7 @@ const instance: ChainResDto = {
     color,
     position,
     inMix,
+    weight,
     writesCaptions,
     captions,
     runs,

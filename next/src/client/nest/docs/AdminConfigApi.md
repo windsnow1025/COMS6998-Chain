@@ -19,8 +19,8 @@ All URIs are relative to *http://localhost*
 |[**adminConfigControllerFindLlmCallSteps**](#adminconfigcontrollerfindllmcallsteps) | **GET** /admin/llm-calls/steps | |
 |[**adminConfigControllerFindLlmCalls**](#adminconfigcontrollerfindllmcalls) | **GET** /admin/llm-calls | |
 |[**adminConfigControllerFindModels**](#adminconfigcontrollerfindmodels) | **GET** /admin/models | |
+|[**adminConfigControllerFindPipelineSteps**](#adminconfigcontrollerfindpipelinesteps) | **GET** /admin/pipeline-steps | |
 |[**adminConfigControllerFindProviders**](#adminconfigcontrollerfindproviders) | **GET** /admin/providers | |
-|[**adminConfigControllerFindScreening**](#adminconfigcontrollerfindscreening) | **GET** /admin/screening | |
 |[**adminConfigControllerFindTerms**](#adminconfigcontrollerfindterms) | **GET** /admin/terms | |
 |[**adminConfigControllerRemoveDomain**](#adminconfigcontrollerremovedomain) | **DELETE** /admin/domains/{id} | |
 |[**adminConfigControllerRemoveEmail**](#adminconfigcontrollerremoveemail) | **DELETE** /admin/emails/{id} | |
@@ -34,8 +34,8 @@ All URIs are relative to *http://localhost*
 |[**adminConfigControllerUpdateEmail**](#adminconfigcontrollerupdateemail) | **PATCH** /admin/emails/{id} | |
 |[**adminConfigControllerUpdateExample**](#adminconfigcontrollerupdateexample) | **PATCH** /admin/examples/{id} | |
 |[**adminConfigControllerUpdateModel**](#adminconfigcontrollerupdatemodel) | **PATCH** /admin/models/{id} | |
+|[**adminConfigControllerUpdatePipelineStep**](#adminconfigcontrollerupdatepipelinestep) | **PATCH** /admin/pipeline-steps/{step} | |
 |[**adminConfigControllerUpdateProvider**](#adminconfigcontrollerupdateprovider) | **PATCH** /admin/providers/{id} | |
-|[**adminConfigControllerUpdateScreening**](#adminconfigcontrollerupdatescreening) | **PATCH** /admin/screening | |
 |[**adminConfigControllerUpdateTerm**](#adminconfigcontrollerupdateterm) | **PATCH** /admin/terms/{id} | |
 
 # **adminConfigControllerCreateDomain**
@@ -747,6 +747,49 @@ This endpoint does not have any parameters.
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **adminConfigControllerFindPipelineSteps**
+> Array<AdminPipelineStepResDto> adminConfigControllerFindPipelineSteps()
+
+
+### Example
+
+```typescript
+import {
+    AdminConfigApi,
+    Configuration
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new AdminConfigApi(configuration);
+
+const { status, data } = await apiInstance.adminConfigControllerFindPipelineSteps();
+```
+
+### Parameters
+This endpoint does not have any parameters.
+
+
+### Return type
+
+**Array<AdminPipelineStepResDto>**
+
+### Authorization
+
+[bearer](../README.md#bearer)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** |  |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **adminConfigControllerFindProviders**
 > Array<AdminProviderResDto> adminConfigControllerFindProviders()
 
@@ -772,49 +815,6 @@ This endpoint does not have any parameters.
 ### Return type
 
 **Array<AdminProviderResDto>**
-
-### Authorization
-
-[bearer](../README.md#bearer)
-
-### HTTP request headers
-
- - **Content-Type**: Not defined
- - **Accept**: application/json
-
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-|**200** |  |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-# **adminConfigControllerFindScreening**
-> AdminScreeningResDto adminConfigControllerFindScreening()
-
-
-### Example
-
-```typescript
-import {
-    AdminConfigApi,
-    Configuration
-} from './api';
-
-const configuration = new Configuration();
-const apiInstance = new AdminConfigApi(configuration);
-
-const { status, data } = await apiInstance.adminConfigControllerFindScreening();
-```
-
-### Parameters
-This endpoint does not have any parameters.
-
-
-### Return type
-
-**AdminScreeningResDto**
 
 ### Authorization
 
@@ -1497,6 +1497,60 @@ const { status, data } = await apiInstance.adminConfigControllerUpdateModel(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **adminConfigControllerUpdatePipelineStep**
+> AdminPipelineStepResDto adminConfigControllerUpdatePipelineStep(adminPipelineStepReqDto)
+
+
+### Example
+
+```typescript
+import {
+    AdminConfigApi,
+    Configuration,
+    AdminPipelineStepReqDto
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new AdminConfigApi(configuration);
+
+let step: string; // (default to undefined)
+let adminPipelineStepReqDto: AdminPipelineStepReqDto; //
+
+const { status, data } = await apiInstance.adminConfigControllerUpdatePipelineStep(
+    step,
+    adminPipelineStepReqDto
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **adminPipelineStepReqDto** | **AdminPipelineStepReqDto**|  | |
+| **step** | [**string**] |  | defaults to undefined|
+
+
+### Return type
+
+**AdminPipelineStepResDto**
+
+### Authorization
+
+[bearer](../README.md#bearer)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** |  |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **adminConfigControllerUpdateProvider**
 > AdminProviderResDto adminConfigControllerUpdateProvider(adminProviderUpdateReqDto)
 
@@ -1533,57 +1587,6 @@ const { status, data } = await apiInstance.adminConfigControllerUpdateProvider(
 ### Return type
 
 **AdminProviderResDto**
-
-### Authorization
-
-[bearer](../README.md#bearer)
-
-### HTTP request headers
-
- - **Content-Type**: application/json
- - **Accept**: application/json
-
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-|**200** |  |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-# **adminConfigControllerUpdateScreening**
-> AdminScreeningResDto adminConfigControllerUpdateScreening(adminScreeningReqDto)
-
-
-### Example
-
-```typescript
-import {
-    AdminConfigApi,
-    Configuration,
-    AdminScreeningReqDto
-} from './api';
-
-const configuration = new Configuration();
-const apiInstance = new AdminConfigApi(configuration);
-
-let adminScreeningReqDto: AdminScreeningReqDto; //
-
-const { status, data } = await apiInstance.adminConfigControllerUpdateScreening(
-    adminScreeningReqDto
-);
-```
-
-### Parameters
-
-|Name | Type | Description  | Notes|
-|------------- | ------------- | ------------- | -------------|
-| **adminScreeningReqDto** | **AdminScreeningReqDto**|  | |
-
-
-### Return type
-
-**AdminScreeningResDto**
 
 ### Authorization
 
